@@ -5,8 +5,13 @@ const geocodeurl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Ange
 
 // request to get the weather data
 request({url:url /* providing url */, json: true /* percing the respond data from json to object is set to true */}, (error,respond) => {
-console.log(chalk.green(`${respond.body.daily.summary} It is currently ${respond.body.currently.temperature} degree out`));
-
+    if(error){
+        console.log(chalk.red.inverse('server error to call weather api'));
+    }else if (respond.body.error){
+        console.log(chalk.red.inverse('incorrect location'));
+    }else{
+        console.log(chalk.green(`${respond.body.daily.summary} It is currently ${respond.body.currently.temperature} degree out`));
+    }
 }) // the npm module request takes two arguments the first arguments is for controle which is in a object formet and second is the callback funcion which responds error and the data
 
 // request to get the location latitude longitude
@@ -14,7 +19,15 @@ console.log(chalk.green(`${respond.body.daily.summary} It is currently ${respond
 request({url: geocodeurl, json: true}, (error,respond) => {
     let longitude = respond.body.features[0].center[0]
     let latitude = respond.body.features[0].center[1]
-    console.log(chalk.red(`los angeles longitude ${longitude} and latitude is ${latitude}`));
+    if(error){
+        console.log(chalk.red.inverse('server error to call weather api'));
+    }else if (respond.body.features === []) {
+        console.log(chalk.red.inverse('incorrect geo location'));
+        
+    }else{
+        console.log(chalk.blue(`los angeles longitude ${longitude} and latitude is ${latitude}`));
+
+    }
     
     
 })
