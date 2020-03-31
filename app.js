@@ -1,7 +1,7 @@
 const request = require('request'); // npm module 
-const chalk = require('chalk')
+const chalk = require('chalk');
+const geocode = require('./utils/geocode')
 const url = 'https://api.darksky.net/forecast/abd629a2a92d47e22e5f79dd28936f76/37.8267,-122.4233' // url or the weather
-const geocodeurl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=pk.eyJ1IjoiaGFyaXNodGFnYWRnaGFyIiwiYSI6ImNrOGVxdXU5NjAyaWszaG14b3BqYzcyYTYifQ.YK_od5JUCDsS3Uq_6TTzPA'
 
 // request to get the weather data
 request({url:url /* providing url */, json: true /* percing the respond data from json to object is set to true */}, (error,respond) => {
@@ -16,18 +16,8 @@ request({url:url /* providing url */, json: true /* percing the respond data fro
 
 // request to get the location latitude longitude
 
-request({url: geocodeurl, json: true}, (error,respond) => {
-    let longitude = respond.body.features[0].center[0]
-    let latitude = respond.body.features[0].center[1]
-    if(error){
-        console.log(chalk.red.inverse('server error to call weather api'));
-    }else if (respond.body.features === []) {
-        console.log(chalk.red.inverse('incorrect geo location'));
-        
-    }else{
-        console.log(chalk.blue(`los angeles longitude ${longitude} and latitude is ${latitude}`));
-
-    }
-    
+geocode('homnabad',(error,data) => {
+    console.log('error:' + error);
+    console.log('data:' + data.location);
     
 })
